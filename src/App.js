@@ -1,24 +1,37 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
-
+import Grid from '@material-ui/core/Grid'
+import NewsList from './Containers/NewsList';
+import SavedArticles from './Containers/SavedArticles';
+import SearchForm from './Components/SearchForm';
 function App() {
+  const [saved, setSaved] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  function addSavedArticle(article) {
+    setSaved((prevSaved) => {
+      if (!prevSaved.includes(article)) {
+        return [...prevSaved, article]
+      }
+      console.log(prevSaved)
+      return prevSaved;
+    });
+  };
+  function submitHandler(searchTerm) {
+    setSearchTerm(searchTerm);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Grid container direction="column">
+      <Grid item xs={12}>
+        <SearchForm submitHandler={submitHandler} />
+      </Grid>
+      <Grid item xs={12}>
+        <SavedArticles articles={saved} />
+      </Grid>
+      <Grid item xs={12}>
+        <NewsList searchTerm={searchTerm} clickHandler={addSavedArticle} />
+      </Grid>
+    </Grid>
   );
 }
 
