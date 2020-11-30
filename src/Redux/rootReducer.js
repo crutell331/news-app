@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 const defaultState = {
     trendingArticles: [],
     searchedArticles: [],
-    favoriteArticles: []
+    savedArticles: []
 };
 
 function trendingArticlesReducer(state = defaultState.trendingArticles, action) {
@@ -18,9 +18,10 @@ function trendingArticlesReducer(state = defaultState.trendingArticles, action) 
     }
 };
 function searchedArticlesReducer(state = defaultState.searchedArticles, action) {
-    switch (action.payload) {
+    switch (action.type) {
         case "FETCH_SEARCHED":
-            console.log("in reducer");
+            console.log("in reducer", action.payload);
+            return action.payload;
             break;
 
         default:
@@ -28,10 +29,11 @@ function searchedArticlesReducer(state = defaultState.searchedArticles, action) 
             break;
     }
 };
-function favoriteArticlesReducer(state = defaultState.favoriteArticles, action) {
-    switch (action.payload) {
-        case "ADD_FAVORITE":
-            console.log("in reducer");
+function savedArticlesReducer(state = defaultState.savedArticles, action) {
+    switch (action.type) {
+        case "SAVE_ARTICLE":
+            console.log("in reducer", action.payload);
+            return [...state, action.payload]
             break;
 
         default:
@@ -43,7 +45,7 @@ function favoriteArticlesReducer(state = defaultState.favoriteArticles, action) 
 const rootReducer = combineReducers({
     trendingArticles: trendingArticlesReducer,
     searchedArticles: searchedArticlesReducer,
-    favoriteArticles: favoriteArticlesReducer
+    savedArticles: savedArticlesReducer
 });
 
 export default rootReducer;

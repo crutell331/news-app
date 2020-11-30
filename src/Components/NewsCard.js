@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { saveArticle } from '../Redux/actions'
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import BookmarkIcon from '@material-ui/icons/Bookmark';
@@ -16,12 +18,11 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function renderContent(newsItem, search, addToFavorites, clicked, classes) {
+function renderContent(newsItem, search, clickHandler, clicked, classes) {
     if (search) {
-        console.log(newsItem)
         return (
             <CardContent>
-                {clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={addToFavorites}>save_article</BookmarkBorderOutlinedIcon>}
+                {clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={clickHandler}>save_article</BookmarkBorderOutlinedIcon>}
                 <a href={newsItem.web_url} target="_blank">
                     <h3><strong>{newsItem.headline.main}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
                 </a>
@@ -31,8 +32,7 @@ function renderContent(newsItem, search, addToFavorites, clicked, classes) {
     } else {
         return (
             < CardContent >
-                { clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={addToFavorites}>save_article</BookmarkBorderOutlinedIcon>
-                }
+                { clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={clickHandler}>save_article</BookmarkBorderOutlinedIcon>}
                 <a href={newsItem.url} target="_blank">
                     <h3><strong>{newsItem.title}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
                 </a>
@@ -42,19 +42,24 @@ function renderContent(newsItem, search, addToFavorites, clicked, classes) {
     };
 };
 
-export default function NewsCard({ newsItem, clickHandler, search }) {
+function NewsCard({ newsItem, addArticleToSaved, search }) {
     const [clicked, setClicked] = useState(false);
     const classes = useStyles();
-    function addToFavorites() {
+
+    function clickHandler() {
         setClicked(true);
-        clickHandler(newsItem);
+        addArticleToSaved(newsItem);
     };
 
     return (
         <Grid item xs={4}>
             <Card>
-                {renderContent(newsItem, search, addToFavorites, clicked, classes)}
+                {renderContent(newsItem, search, clickHandler, clicked, classes)}
             </Card>
         </Grid>
     );
 };
+function mdp(dispatch) {
+    return { addArticleToSaved: (article) => dispatch(saveArticle(article)) };
+};
+export default connect(null, mdp)(NewsCard);

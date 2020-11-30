@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core'
 import Grid from '@material-ui/core/Grid';
 import NewsCard from '../Components/NewsCard';
@@ -14,10 +15,10 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SavedArticles({ articles }) {
+function SavedArticles({ savedArticles }) {
     const classes = useStyles();
     function renderArticles() {
-        return articles.map(item => {
+        return savedArticles.map(item => {
             if (item.title) {
                 return <NewsCard key={item.id} newsItem={item} />
             };
@@ -31,3 +32,9 @@ export default function SavedArticles({ articles }) {
         </Grid>
     );
 };
+function msp(state) {
+    console.log("saved arts", state)
+    return { savedArticles: state.savedArticles }
+};
+
+export default connect(msp)(SavedArticles);

@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -14,15 +13,14 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function NewsList({ clickHandler, trendingArticles, searchResults }) {
-    console.log("trending", trendingArticles)
+function NewsList({ trendingArticles, searchedArticles }) {
     const classes = useStyles();
     function renderArticles() {
-        if (searchResults) {
-            return searchResults.map(item => <NewsCard key={item.id} newsItem={item} clickHandler={clickHandler} search />);
+        if (searchedArticles.length > 0) {
+            return searchedArticles.map(item => <NewsCard key={item.id} newsItem={item} search />);
         } else {
 
-            return trendingArticles.map(item => <NewsCard key={item.id} newsItem={item} clickHandler={clickHandler} />);
+            return trendingArticles.map(item => <NewsCard key={item.id} newsItem={item} />);
         };
     };
     return (
@@ -35,7 +33,12 @@ function NewsList({ clickHandler, trendingArticles, searchResults }) {
 };
 
 function msp(state) {
-    return { trendingArticles: state.trendingArticles }
+    return (
+        {
+            trendingArticles: state.trendingArticles,
+            searchedArticles: state.searchedArticles
+        }
+    )
 };
 
 export default connect(msp)(NewsList);

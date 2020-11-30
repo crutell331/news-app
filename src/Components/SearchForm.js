@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { fetchSearch } from '../Redux/actions';
 import TextField from '@material-ui/core/TextField';
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,13 +19,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function SearchForm({ submitHandler }) {
+function SearchForm({ fetchSearch }) {
     const classes = useStyles();
     const [value, setValue] = useState("");
 
     function beginSearch(e) {
         e.preventDefault();
-        submitHandler(value);
+        fetchSearch(value);
         setValue("");
     };
     function changeHandler(e) {
@@ -38,3 +40,13 @@ export default function SearchForm({ submitHandler }) {
         </form >
     );
 };
+function mdp(dispatch) {
+    return (
+        {
+            fetchSearch: (searchTerm) => dispatch(fetchSearch(searchTerm))
+
+        }
+    );
+};
+
+export default connect(null, mdp)(SearchForm);
