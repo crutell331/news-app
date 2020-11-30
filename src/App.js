@@ -1,21 +1,19 @@
 import { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { fetchTrending } from './Redux/actions';
 import './App.css';
 import Grid from '@material-ui/core/Grid'
 import NewsList from './Containers/NewsList';
 import SavedArticles from './Containers/SavedArticles';
 import SearchForm from './Components/SearchForm';
-function App() {
+
+function App(props) {
   const [saved, setSaved] = useState([]);
   const [searchResults, setSearchResults] = useState(null)
   let [articles, setArticles] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch('https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=bFROkYUGoTuFFJJlgnugF4JeYORGSKgY')
-      const data = await response.json();
-      setArticles(data.results);
-    };
-    fetchData();
+    props.fetchTrending();
   }, []);
 
   async function searchArticles(searchTerm) {
@@ -53,4 +51,8 @@ function App() {
   );
 }
 
-export default App;
+function mdp(dispatch) {
+  return { fetchTrending: () => dispatch(fetchTrending()) };
+};
+
+export default connect(null, mdp)(App);
