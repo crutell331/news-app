@@ -17,7 +17,6 @@ export default function NewsList({ clickHandler, articles, searchResults }) {
     const classes = useStyles();
     function renderArticles() {
         if (searchResults) {
-
             return searchResults.map(item => <NewsCard key={item.id} newsItem={item} clickHandler={clickHandler} search />);
         } else {
 
@@ -29,7 +28,6 @@ export default function NewsList({ clickHandler, articles, searchResults }) {
             <Grid className={classes.root} container direction="row" spacing={5}>
                 {renderArticles()}
             </Grid>
-
         </>
     );
 };

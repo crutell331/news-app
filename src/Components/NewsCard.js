@@ -16,6 +16,32 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
+function renderContent(newsItem, search, addToFavorites, clicked, classes) {
+    if (search) {
+        console.log(newsItem)
+        return (
+            <CardContent>
+                {clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={addToFavorites}>save_article</BookmarkBorderOutlinedIcon>}
+                <a href={newsItem.web_url} target="_blank">
+                    <h3><strong>{newsItem.headline.main}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
+                </a>
+                <p>{newsItem.abstract}</p>
+            </CardContent>
+        );
+    } else {
+        return (
+            < CardContent >
+                { clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={addToFavorites}>save_article</BookmarkBorderOutlinedIcon>
+                }
+                <a href={newsItem.url} target="_blank">
+                    <h3><strong>{newsItem.title}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
+                </a>
+                <p>{newsItem.abstract}</p>
+            </CardContent >
+        );
+    };
+};
+
 export default function NewsCard({ newsItem, clickHandler, search }) {
     const [clicked, setClicked] = useState(false);
     const classes = useStyles();
@@ -23,34 +49,12 @@ export default function NewsCard({ newsItem, clickHandler, search }) {
         setClicked(true);
         clickHandler(newsItem);
     };
-    function renderContent() {
-        if (search) {
-            return (
-                <CardContent>
-                    <h3><strong>{newsItem.headline.main}</strong></h3>
-                    <p>{newsItem.abstract}</p>
-                </CardContent>
-            );
-        } else {
-            return (
-                <CardContent>
-                    {clicked ? <BookmarkIcon>article_saved</BookmarkIcon> : <BookmarkBorderOutlinedIcon className={classes.favorite} onClick={addToFavorites}>save_article</BookmarkBorderOutlinedIcon>}
-                    <a href={newsItem.url} target="_blank">
-                        <h3><strong>{newsItem.title}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
-                    </a>
-                    {newsItem.media[0] ? <img alt="article" src={newsItem.media[0]["media-metadata"][2].url} /> : null}
-                    <p>{newsItem.abstract}</p>
-                </CardContent>
-            );
-        };
-    };
-    // console.log(newsItem.media[0]["media-metadata"])
+
     return (
         <Grid item xs={4}>
             <Card>
-                {renderContent()}
+                {renderContent(newsItem, search, addToFavorites, clicked, classes)}
             </Card>
-
         </Grid>
     );
 };
