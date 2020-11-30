@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Grid from '@material-ui/core/Grid'
 import NewsList from './Containers/NewsList';
@@ -6,7 +6,24 @@ import SavedArticles from './Containers/SavedArticles';
 import SearchForm from './Components/SearchForm';
 function App() {
   const [saved, setSaved] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState(null)
+  let [articles, setArticles] = useState([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      const response = await fetch('https://api.nytimes.com/svc/mostpopular/v2/viewed/1.json?api-key=bFROkYUGoTuFFJJlgnugF4JeYORGSKgY')
+      const data = await response.json();
+      setArticles(data.results);
+    };
+    fetchData();
+  }, []);
+
+  async function searchArticles(searchTerm) {
+    const response = await fetch(`https://api.nytimes.com/svc/search/v2/articlesearch.json?q=${searchTerm}&api-key=bFROkYUGoTuFFJJlgnugF4JeYORGSKgY`);
+    const data = await response.json();
+    console.log(data.response.docs);
+    setSearchResults(data.response.docs);
+  };
 
   function addSavedArticle(article) {
     setSaved((prevSaved) => {
@@ -17,8 +34,9 @@ function App() {
       return prevSaved;
     });
   };
+
   function submitHandler(searchTerm) {
-    setSearchTerm(searchTerm);
+    searchArticles(searchTerm);
   };
   return (
     <Grid container direction="column">
@@ -29,7 +47,7 @@ function App() {
         <SavedArticles articles={saved} />
       </Grid>
       <Grid item xs={12}>
-        <NewsList searchTerm={searchTerm} clickHandler={addSavedArticle} />
+        <NewsList searchResults={searchResults} articles={articles} clickHandler={addSavedArticle} />
       </Grid>
     </Grid>
   );

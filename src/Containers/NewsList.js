@@ -13,29 +13,16 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export default function NewsList({ clickHandler, searchTerm }) {
+export default function NewsList({ clickHandler, articles, searchResults }) {
     const classes = useStyles();
-    let [articles, setArticles] = useState([]);
-
-    useEffect(() => {
-        async function fetchData() {
-            const searchString = `https://microsoft-azure-bing-news-search-v1.p.rapidapi.com/search?q=${searchTerm}`
-            const trendingString = `https://microsoft-azure-bing-news-search-v1.p.rapidapi.com/trendingtopics`
-            const fetchString = searchTerm ? searchString : trendingString
-            const response = await fetch(fetchString, {
-                "method": "GET",
-                "headers": {
-                    "x-rapidapi-host": "microsoft-azure-bing-news-search-v1.p.rapidapi.com",
-                    "x-rapidapi-key": "0c6dad2303mshebe049b78335f04p1557efjsn91ac4937f957"
-                }
-            })
-            const data = await response.json();
-            setArticles(data.value);
-        };
-        fetchData();
-    }, [searchTerm]);
     function renderArticles() {
-        return articles.map(item => <NewsCard key={item.name} newsItem={item} clickHandler={clickHandler} />);
+        if (searchResults) {
+
+            return searchResults.map(item => <NewsCard key={item.id} newsItem={item} clickHandler={clickHandler} search />);
+        } else {
+
+            return articles.map(item => <NewsCard key={item.id} newsItem={item} clickHandler={clickHandler} />);
+        };
     };
     return (
         <>

@@ -17,8 +17,14 @@ const useStyles = makeStyles((theme) => ({
 export default function SavedArticles({ articles }) {
     const classes = useStyles();
     function renderArticles() {
-        return articles.map(item => <NewsCard newsItem={item} />);
+        return articles.map(item => {
+            if (item.title) {
+                return <NewsCard key={item.id} newsItem={item} />
+            };
+            return <NewsCard key={item.id} newsItem={item} search />
+        });
     };
+
     return (
         <Grid className={classes.root} container direction="row" spacing={5}>
             {renderArticles()}
