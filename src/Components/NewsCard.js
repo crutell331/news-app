@@ -38,12 +38,13 @@ export default function NewsCard({ newsItem, clickHandler, search }) {
                     <a href={newsItem.url} target="_blank">
                         <h3><strong>{newsItem.title}</strong><OpenInNewOutlinedIcon >open_article</OpenInNewOutlinedIcon></h3>
                     </a>
+                    {newsItem.media[0] ? <img alt="article" src={newsItem.media[0]["media-metadata"][2].url} /> : null}
                     <p>{newsItem.abstract}</p>
                 </CardContent>
             );
         };
     };
-    console.log(newsItem)
+    // console.log(newsItem.media[0]["media-metadata"])
     return (
         <Grid item xs={4}>
             <Card>
